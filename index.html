@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth;">
 <head>
     <!--
     Resume for: Tepun
@@ -7,10 +7,12 @@
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tepun | Computer Science Student Resume</title>
+    <title>Tepun | CS Student Portfolio (Interactive)</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configure Tailwind for Inter font and some custom colors -->
+    <!-- Load Lucide Icons for aesthetic enhancement -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Configure Tailwind for Inter font and custom Light Mode colors -->
     <script>
         tailwind.config = {
             theme: {
@@ -19,9 +21,12 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'primary-blue': '#1e40af', // Darker blue for accents
-                        'bg-light': '#f9fafb',
-                        'text-dark': '#111827',
+                        // Light Mode Palette with Deep Blue Accent
+                        'primary-accent': '#1d4ed8', // Deep Blue accent (like Indigo-700)
+                        'light-body': '#f9fafb',    // Very light gray background
+                        'light-container': '#ffffff',// White main container
+                        'light-card': '#f3f4f6',    // Subtle light gray card background
+                        'text-dark': '#1f2937',     // Dark slate gray text
                     }
                 }
             }
@@ -29,116 +34,226 @@
     </script>
     <!-- Custom CSS for Print and Aesthetic Adjustments -->
     <style>
-        /* General body styling */
+        /* General body styling for Light Mode */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #e5e7eb; /* Light gray background */
+            background-color: theme('colors.light-body');
+            color: theme('colors.text-dark');
+            transition: background-color 0.3s, color 0.3s;
+            /* Add padding at the top to prevent content from being hidden by the fixed navbar */
+            padding-top: 100px; 
         }
 
-        /* Container styling, ensuring a max width for readability */
+        /* Container styling */
         .resume-container {
             max-width: 1200px;
             margin: 0 auto;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            background-color: white;
+            /* Subtle blue shadow for professional look */
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.15);
+            background-color: theme('colors.light-container');
             padding: 1.5rem;
+            border: 2px solid theme('colors.primary-accent');
+        }
+        
+        /* Fixed Navbar Style */
+        .fixed-nav {
+            background-color: theme('colors.light-container');
+            border-bottom: 2px solid theme('colors.primary-accent');
+            box-shadow: 0 4px 10px rgba(29, 78, 216, 0.2);
+            z-index: 50;
         }
 
-        /* Print styles */
+        .nav-link {
+            color: theme('colors.text-dark');
+            padding: 0.5rem 1rem;
+            transition: color 0.2s, background-color 0.2s;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-link:hover {
+            color: theme('colors.primary-accent');
+            background-color: theme('colors.light-card');
+        }
+
+        /* Print styles: Ensures black text on white background for ink saving */
         @media print {
             body {
+                padding-top: 0 !important;
                 background-color: white !important;
+                color: black !important;
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
             }
+            .fixed-nav {
+                display: none;
+            }
             .resume-container {
+                background-color: white !important;
                 box-shadow: none;
                 margin: 0;
                 padding: 0;
+                border: 1px solid #ccc !important;
             }
-            /* Hide non-essential elements for print if needed, though Tailwind mostly handles this */
-        }
-
-        /* Separator line style */
-        .section-divider {
-            height: 2px;
-            background-color: #e5e7eb;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
+            .content-box {
+                background-color: #f0f0f0 !important;
+                border-color: #ccc !important;
+                color: black !important;
+                box-shadow: none !important;
+            }
+            .skill-badge {
+                 color: theme('colors.primary-accent') !important;
+                 background-color: white !important;
+            }
         }
 
         /* Section headers style */
         .section-header {
-            border-bottom: 3px solid #60a5fa; /* Medium blue highlight */
-            padding-bottom: 0.25rem;
+            border-bottom: 3px solid theme('colors.primary-accent');
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header > .icon {
+            margin-right: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            color: theme('colors.primary-accent');
+        }
+        
+        /* Custom class for skill badges for consistent styling */
+        .skill-badge {
+            border: 1px solid theme('colors.primary-accent');
+            background-color: theme('colors.light-container');
+            color: theme('colors.primary-accent');
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(29, 78, 216, 0.2);
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .skill-badge:hover {
+            background-color: theme('colors.primary-accent');
+            color: theme('colors.light-container'); /* Text becomes white to contrast blue */
+            box-shadow: 0 0 10px rgba(29, 78, 216, 0.4);
         }
     </style>
 </head>
 <body class="antialiased text-text-dark p-4 md:p-8">
 
-    <div class="resume-container rounded-xl">
+    <!-- FIXED NAVIGATION BAR -->
+    <nav class="fixed-nav w-full top-0 left-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center h-16">
+                <a href="#about" class="nav-link text-text-dark">About</a>
+                <a href="#experience" class="nav-link ml-4 text-text-dark">Experience</a>
+                <a href="#projects" class="nav-link ml-4 text-text-dark">Projects</a>
+                <a href="#hobbies-skills" class="nav-link ml-4 text-text-dark">Hobbies / Skills</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- HEADER SECTION (Now just for Contact Info) -->
+    <header class="text-center pb-4 border-b-4 border-primary-accent mb-6">
+        <p class="text-md text-gray-500 tracking-wider">
+            <span class="font-medium mr-2 text-text-dark">COMM LINK:</span>
+            <a href="mailto:tepunhaengate@gmail.com" class="text-primary-accent hover:text-blue-700 transition duration-150 tracking-wider">TEPUNHAENGATE@GMAIL.COM</a>
+        </p>
+    </header>
 
-        <!-- HEADER SECTION: NAME, ROLE, CONTACT -->
-        <header class="text-center pb-4 border-b-4 border-primary-blue mb-6">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-primary-blue tracking-tight mb-1">TEPUN</h1>
-            <h2 class="text-xl md:text-2xl font-semibold text-gray-700 mb-4">Computer Science Student</h2>
-            <p class="text-md text-gray-600">
-                <span class="font-medium mr-2">Email:</span>
-                <a href="mailto:tepunhaengate@gmail.com" class="text-blue-600 hover:text-blue-800 transition duration-150">tepunhaengate@gmail.com</a>
+    <div class="resume-container rounded-lg">
+
+        <!-- ABOUT SECTION (Combines Name/Title/Summary) -->
+        <section id="about" class="pt-4 pb-8">
+            <div class="text-center mb-6">
+                <!-- Profile Placeholder Icon -->
+                <div class="flex justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-accent rounded-full p-2 border-2 border-primary-accent shadow-lg shadow-blue-500/50"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-extrabold text-primary-accent tracking-widest mb-1">TEPUN</h1>
+                <h2 class="text-xl md:text-2xl font-semibold text-text-dark tracking-wider">COMPUTER SCIENCE STUDENT</h2>
+            </div>
+
+            <h3 class="text-2xl font-extrabold uppercase tracking-widest section-header text-primary-accent mt-8">
+                <i data-lucide="notebook-text" class="icon"></i>
+                About Me
+            </h3>
+            <!-- Content Box Class Updated for Light look -->
+            <p class="mt-4 leading-relaxed p-4 rounded-lg border border-primary-accent/50 bg-light-card text-text-dark hover:shadow-lg shadow-blue-500/30 transition duration-200 content-box">
+                A highly motivated Computer Science student working towards a diploma at **ICSUD**. I possess a focused interest in software development and immersive game creation. Proficient in **Python** and **JavaScript**, I leverage my coding skills to build and deploy interactive 2D and text-based game structures. Driven by technical challenges, I constantly seek opportunities to apply and evolve my skills in real-world development scenarios.
             </p>
-        </header>
+        </section>
+
 
         <!-- MAIN LAYOUT: TWO COLUMNS (COLLAPSES ON MOBILE) -->
-        <main class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <main class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mt-8">
 
             <!-- COLUMN 1: MAIN CONTENT (Takes up 2/3 space on desktop) -->
             <div class="md:col-span-2 space-y-8">
 
-                <!-- SUMMARY SECTION -->
-                <section>
-                    <h3 class="text-2xl font-bold uppercase section-header text-gray-800">Summary</h3>
-                    <p class="mt-4 text-gray-700 leading-relaxed bg-bg-light p-4 rounded-lg border border-gray-200">
-                        A Computer Science student working towards a diploma at **ICSUD**, with a keen interest in software development and game creation. Proficient in **Python** and **JavaScript**, I leverage my coding skills to build interactive 2D and text-based games. I am driven by challenges and constantly seek opportunities to apply technical skills in real-world scenarios.
-                    </p>
-                </section>
-
-                <!-- EXPERIENCE SECTION -->
-                <section>
-                    <h3 class="text-2xl font-bold uppercase section-header text-gray-800">Experience</h3>
-                    <div class="mt-4 space-y-4">
-                        <div class="p-4 bg-bg-light rounded-lg border border-gray-200">
-                            <h4 class="text-lg font-semibold text-primary-blue">Independent Game Development</h4>
+                <!-- EXPERIENCE SECTION (ID added for navigation) -->
+                <section id="experience">
+                    <h3 class="text-2xl font-extrabold uppercase tracking-widest section-header text-primary-accent">
+                        <i data-lucide="briefcase" class="icon"></i>
+                        Development Log (Experience)
+                    </h3>
+                    <div class="mt-4 space-y-6">
+                        <!-- Content Box Class Updated for Light look -->
+                        <div class="p-4 rounded-lg border border-primary-accent/50 bg-light-card hover:shadow-lg shadow-blue-500/30 transition duration-200 content-box">
+                            <h4 class="text-lg font-bold text-primary-accent tracking-wider">Independent Game Development</h4>
                             <p class="text-sm text-gray-500">Self-Directed Study | Ongoing</p>
-                            <ul class="list-disc list-inside mt-2 text-gray-700 space-y-1">
-                                <li>**Created 2D games** using modern web technologies (JavaScript/HTML Canvas).</li>
-                                <li>Developed **text-based games** using Python, focusing on engaging narrative and logic design.</li>
-                                <li>Applied principles of object-oriented programming (OOP) in game design and structure.</li>
+                            <ul class="list-disc list-inside mt-3 text-text-dark space-y-2">
+                                <li>**Engineered** two unique **2D games** using modern web technologies (JavaScript/HTML Canvas), emphasizing efficient state management and rendering performance.</li>
+                                <li>**Authored** and **developed** a complete **text-based game** in Python, utilizing complex conditional logic to drive engaging narrative design.</li>
+                                <li>**Implemented** Object-Oriented Programming (OOP) principles to create scalable and modular codebases across all personal projects.</li>
                             </ul>
                         </div>
                     </div>
                 </section>
 
-                <!-- PROJECTS SECTION -->
-                <section>
-                    <h3 class="text-2xl font-bold uppercase section-header text-gray-800">Projects</h3>
-                    <div class="mt-4 space-y-4">
-                        <div class="p-4 bg-bg-light rounded-lg border border-gray-200">
-                            <h4 class="text-lg font-semibold text-primary-blue">Game Development Portfolio</h4>
-                            <p class="text-sm text-gray-500">Personal Project</p>
-                            <p class="mt-2 text-gray-700">
-                                Developed 'Flight simulator', a 2D plane-flying simulation using JavaScript/HTML Canvas, and 'The Text Labyrinth', a Python-based text adventure game, showcasing proficiency in object-oriented programming and interactive design.
+                <!-- PROJECTS SECTION (ID added for navigation) -->
+                <section id="projects">
+                    <h3 class="text-2xl font-extrabold uppercase tracking-widest section-header text-primary-accent">
+                        <i data-lucide="code" class="icon"></i>
+                        Projects & Simulations
+                    </h3>
+                    <div class="mt-4 space-y-6">
+                        <!-- Project 1: Flight Simulator -->
+                        <div class="p-4 rounded-lg border border-primary-accent/50 bg-light-card hover:shadow-lg shadow-blue-500/30 transition duration-200 content-box">
+                            <h4 class="text-lg font-bold text-primary-accent tracking-wider">Flight Simulator (2D)</h4>
+                            <p class="text-sm text-gray-500">Platform: JavaScript / HTML Canvas</p>
+                            <p class="mt-2 text-text-dark">
+                                **Designed** and **built** a 2D plane-flying simulation, demonstrating command of real-time physics and player input handling within the browser environment.
+                            </p>
+                        </div>
+                        
+                        <!-- Project 2: The Text Labyrinth -->
+                        <div class="p-4 rounded-lg border border-primary-accent/50 bg-light-card hover:shadow-lg shadow-blue-500/30 transition duration-200 content-box">
+                            <h4 class="text-lg font-bold text-primary-accent tracking-wider">The Text Labyrinth</h4>
+                            <p class="text-sm text-gray-500">Platform: Python</p>
+                            <p class="mt-2 text-text-dark">
+                                **Created** a text adventure game that required extensive debugging and refinement of over **100 lines of dialogue** and nested game logic, resulting in a cohesive interactive narrative structure.
                             </p>
                         </div>
                     </div>
                 </section>
 
-                <!-- EDUCATION SECTION -->
+                <!-- EDUCATION SECTION (Kept separate from Projects, but not in Nav) -->
                 <section>
-                    <h3 class="text-2xl font-bold uppercase section-header text-gray-800">Education</h3>
-                    <div class="mt-4 space-y-4">
-                        <div class="p-4 bg-bg-light rounded-lg border border-gray-200">
-                            <h4 class="text-lg font-semibold text-primary-blue">Diploma in Computer Science</h4>
-                            <p class="text-gray-700">ICSUD</p>
+                    <h3 class="text-2xl font-extrabold uppercase tracking-widest section-header text-primary-accent">
+                        <i data-lucide="graduation-cap" class="icon"></i>
+                        Education Status
+                    </h3>
+                    <div class="mt-4 space-y-6">
+                        <!-- Content Box Class Updated for Light look -->
+                        <div class="p-4 rounded-lg border border-primary-accent/50 bg-light-card hover:shadow-lg shadow-blue-500/30 transition duration-200 content-box">
+                            <h4 class="text-lg font-bold text-primary-accent tracking-wider">Diploma in Computer Science</h4>
+                            <p class="text-text-dark">ICSUD</p>
                             <p class="text-sm text-gray-500">Currently working on diploma</p>
                         </div>
                     </div>
@@ -146,40 +261,62 @@
 
             </div>
 
-            <!-- COLUMN 2: SIDEBAR (Takes up 1/3 space on desktop) -->
-            <div class="md:col-span-1 space-y-8">
+            <!-- COLUMN 2: SIDEBAR (Combines Skills and Hobbies, ID added for navigation) -->
+            <div class="md:col-span-1 space-y-8" id="hobbies-skills">
 
                 <!-- SKILLS SECTION -->
-                <section>
-                    <h3 class="text-2xl font-bold uppercase section-header text-gray-800">Technical Skills</h3>
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <!-- Skills are represented as badges -->
-                        <span class="bg-primary-blue text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Python</span>
-                        <span class="bg-primary-blue text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">JavaScript</span>
-                        <span class="bg-primary-blue text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">2D Game Development</span>
-                        <span class="bg-primary-blue text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Text-Based Games</span>
-                        <span class="bg-primary-blue text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Code Development</span>
-                        <span class="bg-primary-blue text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Gaming Analysis</span>
+                <section class="pt-8">
+                    <h3 class="text-2xl font-extrabold uppercase tracking-widest section-header text-primary-accent">
+                        <i data-lucide="wrench" class="icon"></i>
+                        System Proficiencies (Skills)
+                    </h3>
+                    <div class="mt-4 space-y-6">
+                        
+                        <!-- Group 1: Programming Languages -->
+                        <div>
+                            <h4 class="text-lg font-bold text-primary-accent mb-3 border-b border-primary-accent/50 pb-1 tracking-wider">Codebase Languages</h4>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="skill-badge">Python</span>
+                                <span class="skill-badge">JavaScript</span>
+                            </div>
+                        </div>
+
+                        <!-- Group 2: Tools & Concepts -->
+                        <div>
+                            <h4 class="text-lg font-bold text-primary-accent mb-3 border-b border-primary-accent/50 pb-1 tracking-wider">Tools & Concepts</h4>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="skill-badge">2D Game Dev</span>
+                                <span class="skill-badge">Text-Based Systems</span>
+                                <span class="skill-badge">OOP</span>
+                                <span class="skill-badge">Game Analysis</span>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
                 <!-- HOBBIES & AWARDS SECTION -->
                 <section>
-                    <h3 class="text-2xl font-bold uppercase section-header text-gray-800">Hobbies & Awards</h3>
-                    <div class="mt-4 space-y-4 text-gray-700">
+                    <h3 class="text-2xl font-extrabold uppercase tracking-widest section-header text-primary-accent">
+                        <i data-lucide="trophy" class="icon"></i>
+                        Achievements & Interests (Hobbies)
+                    </h3>
+                    <div class="mt-4 space-y-6 text-text-dark">
 
-                        <div class="p-4 bg-bg-light rounded-lg border border-gray-200">
-                            <h4 class="text-lg font-semibold text-primary-blue">Notable Achievement</h4>
-                            <p class="text-sm text-gray-700">Won a **gold medal** in an 8-year-old tennis competition.</p>
+                        <!-- Content Box Class Updated for Light look -->
+                        <div class="p-4 rounded-lg border border-primary-accent/50 bg-light-card hover:shadow-lg shadow-blue-500/30 transition duration-200 content-box">
+                            <h4 class="text-lg font-bold text-primary-accent tracking-wider">Notable Achievement</h4>
+                            <p class="text-sm text-gray-500 mt-1">ATHLETIC EXCELLENCE</p>
+                            <p class="mt-2">**Won a gold medal** in an 8-year-old tennis competition, demonstrating competitive discipline and focus.</p>
                         </div>
 
-                        <div class="p-4 bg-bg-light rounded-lg border border-gray-200">
-                            <h4 class="text-lg font-semibold text-primary-blue">Interests</h4>
+                        <!-- Content Box Class Updated for Light look -->
+                        <div class="p-4 rounded-lg border border-primary-accent/50 bg-light-card hover:shadow-lg shadow-blue-500/30 transition duration-200 content-box">
+                            <h4 class="text-lg font-bold text-primary-accent tracking-wider">Interests & Hobbies</h4>
                             <ul class="list-disc list-inside mt-2 space-y-1">
-                                <li>Plays golf</li>
-                                <li>Plays drums</li>
+                                <li>Plays golf and drums</li>
                                 <li>Sports & Fitness</li>
                                 <li>Coding (Personal Projects)</li>
+                                <li>Gaming (Analysis and Play)</li>
                             </ul>
                         </div>
                     </div>
@@ -188,11 +325,16 @@
         </main>
 
         <!-- FOOTER (Optional, for professional touch) -->
-        <footer class="text-center mt-8 pt-4 border-t border-gray-300">
-            <p class="text-sm text-gray-500">&copy; 2025 Tepun. All Rights Reserved.</p>
+        <footer class="text-center mt-8 pt-4 border-t border-primary-accent/50">
+            <p class="text-sm text-gray-600 tracking-wider">&copy; 2025 TEPUN | SYSTEM STATUS: ONLINE</p>
         </footer>
 
     </div>
+
+    <!-- Initialize Lucide icons after body content loads -->
+    <script>
+        lucide.createIcons();
+    </script>
 
 </body>
 </html>
